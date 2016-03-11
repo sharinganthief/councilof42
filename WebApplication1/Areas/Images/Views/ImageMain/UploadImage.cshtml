@@ -1,0 +1,182 @@
+﻿@using System.Web.UI.WebControls
+@model WebApplication1.Areas.Images.Models.UploadImageModel
+
+@{
+
+}
+
+<script>
+    $(function () {
+
+        @*$('#movieCheck').autocomplete({
+            source: JSON.parse('@Html.Raw(Json.Encode(Model.AllTags.ToArray()))'),
+        });*@
+
+        var ulsToCoallate = [];
+
+        @{
+
+            IHtmlString raw = Html.Raw(Json.Encode(Model.AllTags.ToArray()));
+            string inputId = "#tags";
+            string ulId = "#selectedTags";
+            <text>
+
+        var validOptions = @raw;
+        var ulId = '@ulId';
+
+        ulsToCoallate.push('@ulId');
+        $('@inputId').autocomplete({
+            source: validOptions,
+            select: function(event, ui) {
+
+                var uiValue = ui.item.value;
+
+                AppendLi(uiValue, ulId);
+                $(this).val('');
+                return false;
+            },
+            autocompletechange: "_removeIfInvalid", 
+        }).keyup(function(e) {
+            var isValid = false;
+            for (i in validOptions) {
+                if (validOptions[i].toLowerCase().match(this.value.toLowerCase())) {
+                    isValid = true;
+                }
+            }
+            if (!isValid) {
+                if (e.which == 13){
+                                   
+                AppendLi(this.value, ulId);
+                this.value = '';
+                }
+            }
+        });
+
+        </text>
+        }
+            
+        $('#submitForm').click(function() {
+            if (ulsToCoallate == null) {
+                console.log("UlsToCoallate was null");
+            }
+
+            //var form = {};
+            //var imageUrl = "imageURL";
+            //var imageName = "imageName";
+            //var imageDescription = "imageDescription";
+            //var nsfw = "nsfw";
+            //var selectedTags = "selectedTags";
+            var obj = {};
+            
+                var ulName = ulsToCoallate[0];
+                var ul = $(ulName);
+                //var name = $(ul).attr("id").replace("Selected", "");
+                var children = $(ul).children("li");
+                var val = [];
+                if (children != null) {
+                    for (j = 0; j < children.length; j++) {
+                        val.push($(children[j]).text());
+                    }
+                }
+                obj.selectedTags = val;
+            
+            //form[imageUrl] = $('#' + imageUrl).val();
+            //form[imageName] = $('#' + imageName).val();
+            //form[imageDescription] = $('#' + imageDescription).val();
+            //form['nsfw'] = $('#NSFW').val();
+
+            
+            obj.imageUrl = $('#ImageURL').val();
+            obj.imageName = $('#ImageName').val();
+            obj.imageDescription = $('#ImageDescription').val();
+            obj.nsfw = $('#NSFW').is(":checked");
+
+
+            //console.log(form);
+            $.ajax({
+                url: '/Images/ImageMain/UploadImage',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                //dataType: 'json',
+                traditional: true,
+                contentType: 'application/json',
+                success: function(result) {
+                    console.log(result);
+                    if (result.Success) {
+                        $('.imagesuccess').show();
+                    }
+
+                }
+            });
+        });
+
+    });
+
+    _removeIfInvalid = function (event, ui) {return;}
+
+    function AppendLi(value, ulId) {
+        var li = document.createElement("li");
+        li.id = (value + "li").replace(' ', '');
+        console.log(value);
+        li.textContent = value;
+        $(li).click(function() {
+            this.parentNode.removeChild(this);
+        });
+
+        $(ulId).append(li);
+    }
+</script>
+
+
+@*@using (Html.BeginForm("UploadImage", "ImageMain", new {area = "Images"}, FormMethod.Post))
+{*@
+
+@{
+
+@Html.ValidationSummary()
+
+
+    
+        <div class="imagesuccess" style="display: none">
+            Image successfully Uploaded
+        </div>
+    
+
+
+    <div class="pure-form pure-form-aligned">
+        <fieldset>
+            <div class="pure-control-group">
+                
+                @Html.LabelFor(o => o.ImageURL)
+                @Html.TextBoxFor(o => o.ImageURL)
+            </div>
+            <div class="pure-control-group">
+                @Html.LabelFor(o => o.ImageName)
+                @Html.TextBoxFor(o => o.ImageName)
+            </div>
+            <div class="pure-control-group">
+                @Html.LabelFor(o => o.ImageDescription)
+                @Html.TextBoxFor(o => o.ImageDescription)
+            </div>
+            
+            <div class="pure-control-group">
+                <label for="nsfw">NSFW?: </label>
+                @Html.CheckBoxFor(o => o.NSFW)
+            </div>
+
+            <div class="pure-control-group">
+                <label for="tags">Image Tags: </label>
+                <input style="width: 100%;" id="tags">
+                <ul style="margin-left: 12.25%;" id="selectedTags"></ul>
+            </div>
+            
+
+
+            <div class="pure-controls" style="">
+
+                <button id="submitForm" class="pure-button pure-button-primary">Upload Image</button>
+            </div>
+        </fieldset>
+    </div>
+}
+

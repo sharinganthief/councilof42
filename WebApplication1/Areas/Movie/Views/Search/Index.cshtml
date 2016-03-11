@@ -1,0 +1,307 @@
+﻿@model  WebApplication1.Areas.Movie.Models.SearchModel
+@using System.Web.Mvc.Html
+@using WebApplicationData
+@using WebApplicationData.Movie
+@{
+    ViewBag.Title = "Movie Picker";
+    
+}
+
+<script src="~/Scripts/waypoints.min.js"></script>
+<script src="~/Scripts/MovieList.js"></script>
+<script type="text/javascript">
+
+    
+
+    $(function() {
+
+        var movieAccordionContainer = $("#accordionContainer");
+        //var accordionId = "movieAccordion";
+
+        var floatMenu = $('.floatMenu');
+        floatMenu.hide();
+        $('#DirectorsSearch').waypoint(function() {
+            floatMenu.show();
+        });
+
+        $('#criteriaHeader').waypoint(function() {
+            floatMenu.hide();
+        });
+
+        
+       
+        $('#movieCheck').autocomplete({
+            source: JSON.parse('@Html.Raw(Json.Encode(Model.Titles.ToArray()))'),
+        });
+
+        var ulsToCoallate = [];
+
+        @{
+            foreach (MovieCategory movieCategory in Model.Categories)
+            {
+                if (movieCategory == null || movieCategory.Values == null) {continue;}
+                
+                IHtmlString raw = Html.Raw(Json.Encode(movieCategory.Values.ToArray()));
+                string inputId = string.Format("#{0}Search", movieCategory.Name);
+                string ulId = string.Format("#{0}Selected", movieCategory.Name);
+                <text>
+
+        ulsToCoallate.push('@ulId');
+        $('@inputId').autocomplete({
+            source: @raw,
+            select: function(event, ui) {
+                var li = document.createElement("li");
+                li.id = (ui.item.value + "li").replace(' ', '');
+                console.log(ui.item.value);
+                li.textContent = ui.item.value;
+                $(li).click(function() {
+                    this.parentNode.removeChild(this);
+                });
+                //var aTag = document.createElement("a");
+                //aTag.href = "javascript:deleteMe(" + li.id + ")";
+                //$(li).append(aTag);
+                $('@ulId').append(li);
+                $(this).val('');
+                return false;
+            }
+        });
+
+        </text>
+            }
+
+            <text>
+                $("#slider-range").slider({
+                range: true,
+                min: @Model.Length.Min,
+                max: @Model.Length.Max,
+                step: 1,
+                draggable: true,
+                values: [@Model.Length.Min, @Model.Length.Max],
+                slide: function (event,ui)
+                {
+                    var min = ui.values[0];
+                    if (min == 0) {
+                        min = 1;
+                    }
+                    var max = ui.values[1];
+
+                    var minInHours = roundToTwo(min / 60);
+                    var maxInHours = roundToTwo(max / 60);
+                    $("#amount").text(minInHours + "hr(s) - " + maxInHours + "hr(s)");
+                }
+                });
+                $("#amount").text(roundToTwo($("#slider-range").slider("values", 0) / 60)
+                + "hr(s) - " + roundToTwo($("#slider-range").slider("values", 1) / 60) + "hr(s)");
+
+            $("#year-range").slider({
+                range: true,
+                min: @Model.Year.Min,
+                max: @Model.Year.Max,
+                step: 1,
+                draggable: true,
+                values: [@Model.Year.Min, @Model.Year.Max],
+                slide: function (event,ui)
+                {
+                    var min = ui.values[0];
+                    if (min == 0) {
+                        min = 1;
+                    }
+                    var max = ui.values[1];
+
+                
+                    $("#yearRange").text(min + " - " + max );
+                }
+            });
+            $("#yearRange").text($("#year-range").slider("values", 0)
+                    + " - " + $("#year-range").slider("values", 1) );
+    
+
+        </text>
+        }
+
+
+
+        $('#searchMovies').click(function() {
+            if (ulsToCoallate == null) {
+                console.log("UlsToCoallate was null");
+            }
+
+            var form = {};
+            for (i = 0; i < ulsToCoallate.length; i++) {
+                var ul = $(ulsToCoallate[i]);
+                var name = $(ul).attr("id").replace("Selected", "");
+                var children = $(ul).children("li");
+                var val = [];
+                if (children != null) {
+                    for (j = 0; j < children.length; j++) {
+                        val.push($(children[j]).text());
+                    }
+                }
+                form[name] = val;
+            }
+
+            var lengthSlider = $("#slider-range");
+            form["MinLength"] = lengthSlider.slider("values", 0);
+            form["MaxLength"] = lengthSlider.slider("values", 1);
+
+            var yearSlider = $("#year-range");
+            form["MinYear"] = yearSlider.slider("values", 0);
+            form["MaxYear"] = yearSlider.slider("values", 1);
+
+            console.log(form);
+            $.ajax({
+                url: '/Movie/Search/Search',
+                type: 'POST',
+                data: JSON.stringify({ form: form }),
+                //dataType: 'json',
+                traditional: true,
+                contentType: 'application/json',
+                success: function(result) {
+                    console.log(result);
+                    if (result.Success) {
+
+                        if (movieAccordionContainer == null) {
+                            console.log("No container");
+                            movieAccordionContainer = $("#accordionContainer");
+                        }
+
+                        var movies = result.Movies;
+
+                        BuildMovieList(movieAccordionContainer, 'movieAccordion', movies);
+
+                        ScrollToMovieAccordion();
+                        //var active = $( ".selector" ).accordion( "option", "active" );
+
+                    }
+
+                }
+            });
+
+        });
+    });
+
+    function ScrollToMovieAccordion() {
+        var movieAccordionContainer = $("#accordionContainer");
+        $('body').scrollTo(movieAccordionContainer);
+    }
+
+    function roundToTwo(num) {
+        return +(Math.round(num + "e+2") + "e-2");
+    }
+
+
+    function FilterMaybes() {
+        
+        $('#movieAccordion').accordion({
+            active: false,
+            collapsible: true            
+        });
+
+        $(".headerChk:not(:checked)").each(function() {
+            var h3  = $(this).closest("h3");
+            
+            var divId = h3.attr('aria-controls');
+            var div = $(divId);
+            h3.remove();
+            div.remove();
+
+        });
+
+        ScrollToMovieAccordion();
+
+        //var movieAccordion = $("#movieAccordion");
+        //movieAccordion.accordion( "refresh" );
+    }
+
+
+</script>
+
+<body>
+    
+    @if (User.IsInRole(Settings.MovieAdminRole))
+    {
+        @Html.ActionLink("Movie Admin", "Index", "Admin", new { area = "Movie" }, new { @class = "pure-button pure-button-primary" });
+    }
+    
+    @Html.ActionLink("Manage Movies", "ManageUserMovies", "Admin", new { area = "Movie" }, new { @class = "pure-button pure-button-primary" })
+
+    <h2 id="movieHeader">Movie</h2>
+
+    <div class="pure-form pure-form-aligned">
+        <fieldset>
+            <div class="pure-control-group">
+                <label for="movieCheck">Title Check: </label>
+                <input style="width: 100%;" id="movieCheck">
+            </div>
+            
+            <div class="pure-control-group">
+                <h3 style="font-weight: bold;" id="criteriaHeader">Movie search criteria:</h3>
+            </div>
+
+            
+
+            @{
+                foreach (MovieCategory movieCategory in Model.Categories)
+                {
+                    string inputId = string.Format("{0}Search", movieCategory.Name);
+                    string ulId = string.Format("{0}Selected", movieCategory.Name);
+
+                    @*<div class="field_container">*@
+                    <div class="pure-control-group">
+                        <label for="@inputId">@movieCategory.Name.Replace('_', ' '): </label>
+                        <input style="width: 100%;" id="@inputId">
+                        <ul style="margin-left: 12.25%;" id="@ulId"></ul>
+                    </div>
+                }
+            }
+            <div class="pure-control-group">
+
+                <label for="amount">Time Range:</label>
+                <span id="amount" style="border:0; font-weight:bold;"></span>
+            </div>
+            <div class="pure-control-group" style="width: 23%;margin-left: 14.54%;">
+                <div id="slider-range"></div>
+            </div>
+            
+            <div class="pure-control-group">
+
+                <label for="yearRange">Year Range:</label>
+                <span id="yearRange" style="border:0; font-weight:bold;"></span>
+            </div>
+            <div class="pure-control-group" style="width: 23%;margin-left: 14.54%;">
+                <div id="year-range"></div>
+            </div>
+            
+            
+            
+            @*
+                <label for="cb" class="pure-checkbox">
+                    <input id="cb" type="checkbox"> I've read the terms and conditions
+                </label>*@
+            <div class="pure-controls" style="">
+
+                <button id="searchMovies" class="pure-button pure-button-primary">Search Movies</button>
+            </div>
+        </fieldset>
+    </div>
+
+
+
+    <div style="clear: both"></div>
+    <br />
+    <div id="accordionContainer" style="width: 75%;">
+    </div>
+    
+    <div class="floatMenu">
+        <ul>
+            <li>
+                <a href="#movieHeader">Back To Top</a>
+            </li>
+            <li>
+                <a href="#" onclick='return FilterMaybes()'>Filter</a>
+            </li>
+        </ul>
+    </div>
+
+</body>
+

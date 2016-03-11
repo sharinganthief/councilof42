@@ -1,0 +1,208 @@
+﻿
+@using WebApplicationData
+@model WebApplication1.Areas.Images.Models.IndexModel
+
+@{
+    ViewBag.Title = "Images";
+}
+
+
+
+<div class="imageFloatMenu">
+    <div class="pure-control-group">
+        <ul>
+            <li>
+                <label for="tags">Filter by tags: </label>
+                <input style="width: 90%;" id="tags">
+            </li>
+        </ul>
+
+        <ul style="margin-left: 12.25%;" id="selectedTags"></ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var _page = 0;
+    var _pageTerminate = -42;
+    var _inCallback = false;
+    var _tags = null;
+    var ul;
+
+    $(function() {
+
+         
+
+        @{
+
+             IHtmlString raw = Html.Raw(Json.Encode(Model.AllTags.ToArray()));
+             string inputId = "#tags";
+             string ulId = "#selectedTags";
+
+            <text>
+                
+            ul = $('@ulId');
+        
+            </text>
+             
+             foreach (string selectedTag in Model.SelectedTags)
+             {
+                 <text>
+                     
+                    AddLiToUl(ul, '@selectedTag');
+                
+                 </text>
+             }
+
+         }
+
+         
+        $('@inputId').autocomplete({
+            source: @raw,
+            select: function(event, ui) {
+
+                AddLiToUl(ul, ui.item.value );
+
+                LoadFresh(ul);
+
+                $(this).val('');
+                return false;
+            }
+        });
+
+            
+        
+
+         });
+
+    function AddLiToUl(ul, value ) {
+        
+                
+        var li = document.createElement("li");
+        li.id = ( value + "li").replace(' ', '');
+        console.log(value);
+        li.textContent = value;
+        $(li).click(function() {
+            this.parentNode.removeChild(this);
+            LoadFresh(ul);
+            window.scrollTo(0,0);
+        });
+
+        ul.append(li);
+
+        _tags = GetChildTagsAsArray(ul);
+
+        return;
+    }
+
+    function LoadFresh(ul) {
+        _page = -1;
+        _tags = GetChildTagsAsArray(ul);
+        loadImages();
+    }
+
+    function GetChildTagsAsArray(ul) {
+        var children = ul.children("li");
+        var tags = [];
+        if (children != null) {
+            for (var j = 0; j < children.length; j++) {
+                tags.push($(children[j]).text());
+            }
+        }
+
+        if (tags.length == 0) {
+            tags = null;
+        }
+
+        return tags;
+    }
+
+        function loadImages() {
+            if (_page != _pageTerminate && !_inCallback) {
+                _inCallback = true;
+                _page++;
+                $('div#loading').html('<p><img src="/Content/Images/lemniscate_scaled.gif"></p>');
+
+                
+                $.ajax({
+                    url: "/Images/ImageMain/IndexPost",
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        page: _page,
+                        imageTags: _tags,
+                    }),
+                    success: function(data) {
+
+                        if (data == '') {
+                            _page = _pageTerminate;
+                            return;
+                        }
+
+                        var imageContainer = $('#images.imageContainer');
+
+                        if (imageContainer == null) return;
+
+                        // if first page, go ahead and clear all images
+                        if (_page == 0 ) {
+                            var children = imageContainer.children("div.imageDiv");
+                            children.each(function() {
+                                $(this).remove();
+                            });
+                        }
+                    
+                        imageContainer.append(data);
+
+                    }
+                }).done(function() {
+                    console.log("Filter By Tags done");
+                });
+
+                
+                _inCallback = false;
+                $('div#loading').empty();
+            }
+        }
+
+        var dcList = true;
+
+        $(window).scroll(function () {
+
+            var windowTop = $(window).scrollTop();
+            var difference = $(document).height() - $(window).height();
+
+            //console.log("windowTop: " + windowTop);
+            //console.log("difference: " + difference);
+            //console.log("equal? " + windowTop == difference);
+
+            if ( Math.abs(windowTop - difference) < 5 ) {
+                console.log('loading');
+                loadImages();
+            }
+        });
+</script>
+
+<div class="container" style="background-color: lightgrey;  margin-top: 70px; ">
+
+    <h2>Images</h2>
+
+
+    @if (User.IsInRole(Settings.FriendRole))
+    {
+        <ul>
+            <li>@Html.ActionLink("Upload Image", "UploadImage", "ImageMain")</li>
+            <li>@Html.ActionLink("Image Tags", "ImageTags", "ImageMain")</li>
+        </ul>
+    }
+
+    <div id="images" class="imageContainer">
+        @Html.Partial("_Images", Model.Images)
+    </div>
+
+
+    <div class="pure-control-group">
+
+    </div>
+    <div id="loading"></div>
+
+</div>

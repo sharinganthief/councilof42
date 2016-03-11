@@ -1,0 +1,67 @@
+﻿@using WebApplicationData.Comic
+@model WebApplication1.Areas.Comic.Models.Comic.ComicIndexModel
+
+@{
+    ViewBag.Title = "Comics";
+}
+
+<script type="text/javascript">
+$(function() {
+    $('.partialContents').each(function(index, item) {
+        var url = $(item).data("url");
+        if (url && url.length > 0) {
+            
+            $(item).load(url);
+        }
+    });
+});
+    </script>
+
+<style>
+    .partialContents {
+        /*border: black 1px ridge;*/
+        padding: 5px;
+        margin: 5px 0px;
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Comics</h1>
+    @*<p><a href="http://asp.net" class="btn btn-primary btn-large">Learn more &raquo;</a></p>*@
+</div>
+
+<div class="row">
+    <ul>
+        @{
+            foreach (KeyValuePair<string, ComicInfo> action in Model.ActionsList)
+            {
+                <li>
+                    <div style="margin: 5px 5px;">
+                        <a class="pure-button pure-button-primary" href="@string.Format("#main{0}Comic", action.Key.ToUpper())">In Page @action.Key</a>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+
+
+@{
+    foreach (KeyValuePair<string, ComicInfo> action in Model.ActionsList)
+    {
+        string viewPath = string.Format("/Comic/Comics/{0}?loadPartial=true", action.Key);
+        <div class="partialContents" data-url="@viewPath">
+            loading...
+        </div>
+        @Html.ActionLink(
+                    string.Format("Main {0}", action.Key),
+                    string.Format("{0}", action.Key),
+                    "Comics",
+                    new { loadPartial = false },
+                    new { @class = "pure-button pure-button-primary" }
+                    )
+    }
+}
+
+

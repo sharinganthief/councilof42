@@ -1,0 +1,13 @@
+﻿@model WebApplicationData.DreamLog
+
+@{
+    ViewBag.Title = "Edit Dream Log";
+
+}
+@using (@Html.BeginForm("EditDreamLog", "DreamLog"))
+ 
+{
+
+    @Html.Partial("_DreamLogFormPartial", @Model);
+
+}

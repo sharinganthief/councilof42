@@ -1,0 +1,26 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Add movies";
+    
+}
+
+<div>
+    @using (Html.BeginForm("AddMovies", "Admin", FormMethod.Post))
+    {
+        @Html.ValidationSummary(true)
+        <fieldset>
+            <legend>Add Movie(s)</legend>
+            <p>Add the movie titles or IMDB urls to the following text area splitting them into one per line. hit go at the end dumbass.</p>
+
+            <div style="margin: 0px 0px 10px 0px">
+                <textarea required rows="5" name="moviesToAdd" id="moviesToAdd"></textarea>
+            </div>
+
+            <p>
+                <input type="submit" value="Add Movies" />
+            </p>
+        </fieldset>
+    }
+</div>
+

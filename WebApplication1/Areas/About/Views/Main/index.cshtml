@@ -1,0 +1,11 @@
+﻿@model WebApplication1.Areas.About.Models.MainModel
+
+@{
+    ViewBag.Title = "index";
+}
+
+<h2>About the Council</h2>
+<ul>
+    <li>@Html.ActionLink("Rules", "Index", "Rules", new { area = "About"}, null)</li>
+</ul>
+

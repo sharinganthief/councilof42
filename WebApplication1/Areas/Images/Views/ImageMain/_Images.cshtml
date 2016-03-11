@@ -1,0 +1,32 @@
+﻿@using WebApplicationData.Image
+@model IEnumerable<ImageDto>
+
+@{
+
+    if (!Model.Any())
+    {
+
+    }
+    else
+    {
+        ImageDto last = Model.Last();
+
+        foreach (ImageDto imageResult in Model)
+        {
+            <div>
+                <div class="imageDiv">
+                    <h2 style="font-weight: bold;word-wrap: break-word; ">@imageResult.ImageName</h2>
+                    <div class="col-md-8">
+                        <img class="img-responsive" src="@imageResult.ImageURL" title="@imageResult.ImageDescription" alt="@imageResult.ImageDescription" />
+                    </div>
+                    <div class="col-md-4">
+                        <p>content content content</p>
+                    </div>
+                </div>
+                
+                <hr class="imageHr" />
+                
+            </div>
+        }
+    }
+}

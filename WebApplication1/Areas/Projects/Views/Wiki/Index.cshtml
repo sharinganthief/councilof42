@@ -1,0 +1,105 @@
+﻿@model WebApplication1.Areas.Projects.Models.WikiModel
+
+@{
+    ViewBag.Title = "Wiki Crawler";
+}
+
+<script>
+    $(function() {
+
+        var showThings = '@Model.Result';
+
+        if (showThings != '') {
+
+            var ul = $("#hopsUl");
+
+            setTimeout(function() {
+                ul.removeClass("hide");
+            }, 500);
+
+            var lis = ul.children("li");
+            var count = 0;
+            var timeOut = 0;
+            lis.each(function () {
+                count++;
+                timeOut = 500 * count;
+                var li = $(this);
+                console.log(timeOut);
+                setTimeout(function () {
+                    var liElem = $(li);
+                    liElem.removeClass("hide");
+                }, timeOut);
+            });
+
+            $("html, body").animate({ scrollTop: $(document).height() }, timeOut);
+        }
+    });
+</script>
+
+
+<div>
+    <h2>Wikipedia Philosophy Crawler</h2>
+    <p>It is a somewhat unknown concept that almost* every page on wikipedia will link to a chain of pages eventually reaching the page <a href="http://en.wikipedia.org/wiki/Philosophy">Philosophy</a>. ( see <a href="http://en.wikipedia.org/wiki/Wikipedia:Getting_to_Philosophy">here</a>)</p>
+</div>
+
+<div id="gameDiv">
+    <h4>The Game</h4>
+    <p>Here you can either enter your own wikipedia page or check for a random one and see if it goes to philosophy</p>
+    @using (Html.BeginForm("Index", "Wiki", new { area = "Projects" }, FormMethod.Post, null))
+    {
+        <div>@Html.TextBoxFor(model => model.WikipediaPageURL)</div>
+        <div>@Html.CheckBoxFor(model => model.GetRandom) Random URL?</div>
+        <div><input type="submit" class="" /></div>
+    }
+    <br/>
+    @if (Model.Result != null)
+    {
+        <div id="results">
+        
+            <p>Initial url was: 
+                <a href="@Model.Result.OriginalURL">
+                    @HttpUtility.UrlDecode(Model.Result.OriginalURL)
+                </a>
+            </p>
+            
+            <ul id="hopsUl" class="hide">
+                @{
+                    foreach (string s in Model.Result.HopList)
+                    {
+                        string decoded = HttpUtility.UrlDecode(s);
+                        if (decoded == null)
+                        {
+                            continue;
+                        }
+                        string page = decoded.Split(new[] {'/'}).Last();
+                        if (page == null)
+                        {
+                            continue;
+                        }
+                        <li class="hide"><a href="@s">@page</a></li>
+                    }
+
+                    <li class ="hide" style="list-style: none">
+                        <div id="finalResults" class="">
+                            @if (Model.Result.Succeeded)
+                            {
+                                <p>Success! After @Model.Result.Hops "hops" we found Philosophy</p>
+                            }
+                            else
+                            {
+                                <p>Failure...</p>
+                                <ul>
+                                    @foreach (string s in Model.Result.Error)
+                                    {
+                                        <li>@s</li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </li>
+}
+            </ul>
+        </div>
+    }
+
+</div>

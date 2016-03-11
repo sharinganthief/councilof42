@@ -1,0 +1,48 @@
+﻿@using WebApplicationData
+@{
+    ViewBag.Title = "Dream Log";
+}
+
+<div class="jumbotron">
+    <h1>Dream Log</h1>
+    <p class="lead">
+        Here you will find the crazy, eratic, erotic, interesting and etc details that Phillip rememebers from various dreams in no particular sequence outside of minor chronology.
+    </p>
+</div>
+
+
+<div class="row">
+        @foreach (DreamLog log in Model)
+        {
+            <div class="col-md-4" style="border-bottom:1px solid #200D0D">
+            @if (User.IsInRole(Settings.DeveloperRole))
+            {
+                @Html.ActionLink("Edit", "EditDreamLog", new {dreamLogID = @log.Id})
+            }
+            <h3>@log.Title</h3>
+
+            <p>
+                @log.Text
+            </p>
+        </div>
+
+    }
+</div>
+
+    @*<div class="row">
+            <div class="col-md-4">
+                <h2>Yesterday</h2>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sem sem, commodo vel neque et, egestas tempus metus. Sed quis tempus nibh, nec lobortis lectus. Cras sit amet tincidunt ligula. Quisque ultricies tortor at nisl pellentesque vulputate. Vestibulum id nunc neque. Maecenas tincidunt velit justo, ut imperdiet lorem aliquet a. Sed metus quam, congue ac quam non, pulvinar molestie elit.
+                </p>
+                <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            </div>
+            <div class="col-md-4">
+                <h2>Today</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sem sem, commodo vel neque et, egestas tempus metus. Sed quis tempus nibh, nec lobortis lectus. Cras sit amet tincidunt ligula. Quisque ultricies tortor at nisl pellentesque vulputate. Vestibulum id nunc neque. Maecenas tincidunt velit justo, ut imperdiet lorem aliquet a. Sed metus quam, congue ac quam non, pulvinar molestie elit.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Tomorrow</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sem sem, commodo vel neque et, egestas tempus metus. Sed quis tempus nibh, nec lobortis lectus. Cras sit amet tincidunt ligula. Quisque ultricies tortor at nisl pellentesque vulputate. Vestibulum id nunc neque. Maecenas tincidunt velit justo, ut imperdiet lorem aliquet a. Sed metus quam, congue ac quam non, pulvinar molestie elit.</p>
+            </div>
+        </div>*@

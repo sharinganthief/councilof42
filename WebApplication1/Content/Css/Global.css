@@ -1,0 +1,251 @@
+﻿html {
+	/*overflow: auto;*/
+	z-index: 0 !important;
+	overflow: scroll !important;
+    
+}
+body {
+	/*position: absolute;*/
+	top: 20px;
+	left: 20px;
+	bottom: 20px;
+	right: 20px;
+	padding: 30px; 
+	/*overflow-y: hidden;*/
+	overflow-x: hidden;
+	padding-top:70px;
+	z-index: 0 !important;
+	overflow: scroll !important;
+}
+body:hover {
+	overflow-y: scroll;
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+	display:none;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+ 
+.navbar-header {
+  float: none;
+}
+.navbar-toggle {
+  display: block;
+}
+.navbar-collapse {
+	border-top: 1px solid transparent;
+	-webkit-box-shadow: inset 0 1px 0 #ffffff;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+	-ms-box-shadow: inset 0 1px 0 #ffffff;
+	-ms-box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+	box-shadow: inset 0 1px 0 #ffffff;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.navbar-collapse.collapse {
+  display: none!important;
+}
+.navbar-nav {
+  float: none!important;
+  margin: 7.5px -15px;
+}
+.navbar-nav>li {
+  float: none;
+}
+.navbar-nav>li>a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
+
+/*Images*/
+
+.imageHr {
+		height: 1px;
+		border: none;
+		color: #333;
+		background-color: #333;
+		width: 90%;
+		 margin-bottom: 10px;
+		 display: inline-block;
+
+margin-left: 5%;
+	}
+
+	.imageContainer {
+		margin: auto 20px;
+		background-color: white;
+		/*-ms-border-radius: 0 0 3px 3px;*/
+		/*border-radius: 20px 20px 20px 20px;*/
+	}
+
+	.imageDiv {
+		text-align: center;
+		/*border-bottom: 2px solid black;*/
+		padding: 20px 15px 10px 15px;
+	}
+
+	/*.imageDiv:last-of-type {
+		border-bottom: none;
+	}*/
+
+	 .imagesuccess {
+		color: #468847;
+		background-color: #dff0d8;
+		border-color: #d6e9c6;
+		padding: 15px;
+		width: 40%;
+		text-align: center;
+	}
+
+
+	 /*Movies*/
+
+	 
+	.rangeSlider {
+		width: 56%;
+		vertical-align: middle;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.floatMenu {
+		position: fixed;
+		bottom: 24%;
+		right: 14%;
+	}
+
+	.floatMenu > ul{
+		list-style: none;
+	}
+
+	.imageFloatMenu {
+		/*position: fixed;*/
+		top: 51px;
+		/*background-color: black;*/
+		/*color: orange;*/
+		width: 100%;
+		right: 0;
+		left: 0;
+		z-index: 9999;
+
+	}
+
+	ul{
+		list-style: none;
+	}
+
+	.headerChk {
+		float: right;
+		z-index: 100;
+	}
+
+@media only screen 
+	/*and (min-device-width : 768px)*/
+and (max-device-width : 818px)   {
+	.imageFloatMenu {
+		top: 101px;
+	}
+}
+
+
+	
+
+
+	/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+/* Styles */
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (min-width : 321px) {
+/* Styles */
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) {
+/* Styles */
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+/* Styles */
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+/* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+/* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+   
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+	
+}

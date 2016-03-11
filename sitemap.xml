@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>http://www.councilof42.com/</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/About/Main</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Home/Contact</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Movie/Search</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Projects/Main</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Account/Register</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Account/Login</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/About/Rules</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Projects/Wiki</loc>
+</url>
+<url>
+  <loc>http://www.councilof42.com/Projects/Shiritori</loc>
+</url>
+</urlset>

@@ -1,0 +1,43 @@
+﻿
+@model WebApplication1.Areas.Comic.Models.Comic.XkcdModel
+
+@{
+    ViewBag.Title = "XKCD";
+    string baseUrl = "/Comic/Comics/Xkcd?loadPartial=true&comicURL=";
+    string previousAction = string.Format("{0}{1}", baseUrl, Model.PreviousComicURL);
+    string nextAction = string.Format("{0}{1}", baseUrl, Model.NextComicURL);
+    //string randomAction = string.Format("{0}{1}", baseUrl, Model.RandomComicUrl);
+}
+<script src="~/Scripts/LeftRightComicPrevComicNext.js"></script>
+
+<div id="mainXKCDComic" class="main-comic">
+    <h3>Xkcd</h3>
+
+    <div class="pure-controls" style="">
+
+        <a href="javascript:;" onclick='LoadComic($(this), "mainXKCDComic");' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+        @*@if (!string.IsNullOrWhiteSpace(Model.RandomComicUrl))
+        {
+            <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@randomAction" class="comic-random pure-button">Random</a>
+        }*@
+        <a href="javascript:;" onclick='LoadComic($(this), "mainXKCDComic");' data-href="@nextAction" class="comic-next pure-button">Next</a>
+    </div>
+
+    <h2>@Model.ComicTitle</h2>
+    <div>
+        <img class="img-responsive" src="@Model.ComicURL" title="@Model.ComicText" />
+    </div>
+    <div style="margin: 20px 0px 0px 0px">
+        <p>@Model.ComicText</p>
+    </div>
+
+    <div class="pure-controls" style="">
+
+        <a href="javascript:;" onclick='LoadComic($(this), "mainXKCDComic");' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+        @*@if (!string.IsNullOrWhiteSpace(Model.RandomComicUrl))
+        {
+            <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@randomAction" class="comic-random pure-button">Random</a>
+        }*@
+        <a href="javascript:;" onclick='LoadComic($(this), "mainXKCDComic");' data-href="@nextAction" class="comic-next pure-button">Next</a>
+    </div>
+</div>

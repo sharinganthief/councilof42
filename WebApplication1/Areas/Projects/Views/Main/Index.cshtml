@@ -1,0 +1,12 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Projects";
+}
+
+<h2>Projects</h2>
+<ul>
+    <li>@Html.ActionLink("Wikipedia Philosophy Crawler", "Index", "Wiki", new { Area = "Projects" }, new { })</li>
+    <li>@Html.ActionLink("Shiritori Word Game adaptation", "Index", "Shiritori", new { Area = "Projects" }, new { })</li>
+
+</ul>

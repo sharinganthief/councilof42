@@ -1,0 +1,100 @@
+﻿@using WebApplicationData
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title</title>
+	<link href="~/Content/Css/Global.css" rel="stylesheet" />
+	<link href="~/Content/Css/bootstrap.min.css" rel="stylesheet" />
+	<link href="~/Content/Css/forms.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css">
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="//hammerjs.github.io/dist/hammer.min.js"></script>
+    <script src="~/Scripts/jquery.hammer.js"></script>
+	<script src="~/Scripts/extensions.js"></script>
+    <script src="~/Scripts/nprogress.js"></script>
+    <link href="~/Content/Css/nprogress.css" rel="stylesheet" />
+    <link rel="icon" href="@Url.Content("~/Content/Images/council-of-42-logo.png")" />
+</head>
+	<body>
+        <script src="~/Scripts/LoadComic.js"></script>
+		<script>
+	$(function () {
+
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+	    })
+        (window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+	    window.ga('create', 'UA-61151290-1', 'auto');
+	    window.ga('send', 'pageview');
+
+	    $(document).ajaxStart(function () {
+			NProgress.configure({ minimum: 0.1 });
+			NProgress.start();
+		});
+
+		$(document).ajaxStop(function () {
+			
+			NProgress.done();
+		});
+	});
+		</script>
+        
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="navbar-header">
+		        @Html.ActionLink("Council of 42", "Index", "Home", new { Area = "" }, new { @class = "navbar-brand" })
+		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		        </button>
+		    </div>
+			<div class="navbar-collapse collapse" style="  overflow-x: hidden;">
+				<!-- http://users.tpg.com.au/j_birch/plugins/superfish/examples/ -->
+				<ul class="nav navbar-nav">
+					<li>@Html.ActionLink("About", "Index", "Main", new { Area = "About" }, null)</li>
+					<li>@Html.ActionLink("Contact", "Contact", "Home", new { Area = "" }, null)</li>
+					@if (User.IsInRole(Settings.FriendRole))
+					{
+						<li>@Html.ActionLink("Dream Log", "Index", "DreamLog", new { Area = "" }, null)</li>
+						<li>@Html.ActionLink("Comics", "Index", "Comics", new { Area = "Comic" }, new { })</li>
+						<li>@Html.ActionLink("Images", "Index", "ImageMain", new { Area = "Images" }, new { })</li>
+					}
+					<li>@Html.ActionLink("Movies", "Index", "Search", new { Area = "Movie" }, new { })</li>
+					<li>@Html.ActionLink("Projects", "Index", "Main", new { Area = "Projects" }, new { })</li>
+
+					@if (User.IsInRole(Settings.DeveloperRole))
+					{
+						<li>@Html.ActionLink("Web Admin", "Index", "WebAdmin", new { Area = "" }, new { })</li>
+					}
+					@Html.Partial("_LoginPartial")
+				</ul>
+
+
+			</div>
+
+		</nav>
+        
+        
+
+	    <div class="container body-content">
+	        <div class="row">
+                <img src="~/Content/Images/council-of-42-logo.png" style="  float: left;width: 260px;" />
+	        </div>
+	        @RenderBody()
+	        <hr />
+	        <footer>
+	            <p>&copy; @DateTime.Now.Year - Council of 42</p>
+	        </footer>
+	    </div>
+
+		@*@Scripts.Render("~/bundles/jquery")*@
+		@Scripts.Render("~/bundles/bootstrap")
+		@RenderSection("scripts", required: false)
+	</body>
+</html>

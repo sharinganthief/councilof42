@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [councilUser]
+    WITH PASSWORD = N'ngtqTE`pfemv&BewuL|fvhrfmsFT7_&#$!~<zrj{i{pY;w5C', SID = 0x91DC36EA3841F3439B21EEEF25A288DC, DEFAULT_DATABASE = [WebApplication1], DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+

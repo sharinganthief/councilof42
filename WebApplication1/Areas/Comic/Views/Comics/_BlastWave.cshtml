@@ -1,0 +1,33 @@
+﻿@model WebApplication1.Areas.Comic.Models.Comic.BlastWaveModel
+
+@{
+    ViewBag.Title = "Blast Wave";
+    string baseUrl = "/Comic/Comics/BlastWave?loadPartial=true&comicURL=";
+    string previousAction = string.Format("{0}{1}", baseUrl, Model.PreviousComicURL);
+    string nextAction = string.Format("{0}{1}", baseUrl, Model.NextComicURL);
+}
+<script src="~/Scripts/LeftRightComicPrevComicNext.js"></script>
+<div id="mainBLASTWAVEComic" class="main-comic">
+    <h3>Blast Wave</h3>
+
+    <div class="pure-controls" style="">
+
+        @*<button id="searchMovies" class="pure-button pure-button-primary">Search Movies</button>*@
+        <a onclick='LoadComic($(this), "mainBLASTWAVEComic"); return false;' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+        <a onclick='LoadComic($(this), "mainBLASTWAVEComic"); return false;' data-href="@nextAction" class="comic-next pure-button">Next</a>
+    </div>
+
+    <h2>@Model.ComicTitle</h2>
+    <div>
+        <img class="img-responsive" src="@Model.ComicURL" />
+    </div>
+
+    <div class="pure-controls" style="">
+
+        @*<button id="searchMovies" class="pure-button pure-button-primary">Search Movies</button>*@
+        <a onclick='LoadComic($(this), "mainBLASTWAVEComic"); return false;' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+        <a onclick='LoadComic($(this), "mainBLASTWAVEComic"); return false;' data-href="@nextAction" class="comic-next pure-button">Next</a>
+    </div>
+
+</div>
+

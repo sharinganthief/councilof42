@@ -1,0 +1,23 @@
+﻿
+@model WebApplicationData.DreamLog
+
+<div class="pure-form pure-form-aligned">
+    <fieldset>
+        <div class="pure-control-group">
+
+            @Html.LabelFor(o => o.Title)
+            @Html.TextBoxFor(o => o.Title)
+        </div>
+        <div class="pure-control-group">
+            @Html.LabelFor(o => o.Text)
+            @Html.TextAreaFor(o => o.Text)
+        </div>
+
+
+        <div class="pure-controls" style="">
+
+            @*<button id="submitForm" class="pure-button pure-button-primary">Upload Image</button>*@
+            <input type="submit" value="Add/Edit Dream Log">
+        </div>
+    </fieldset>
+</div>

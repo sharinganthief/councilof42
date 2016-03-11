@@ -1,0 +1,16 @@
+﻿@model WebApplication1.Areas.About.Models.RulesModel
+
+@{
+    ViewBag.Title = "index";
+}
+
+<h2>Council Rules</h2>
+<ol start="0">
+    @{
+        foreach (string rule in Model.RulesList)
+        {
+            <li>@Html.Raw(rule)</li>
+        }
+    }
+</ol>
+

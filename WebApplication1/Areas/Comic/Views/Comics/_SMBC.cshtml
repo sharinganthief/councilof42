@@ -1,0 +1,49 @@
+﻿
+@model WebApplication1.Areas.Comic.Models.Comic.SmbcModel
+
+@{
+    ViewBag.Title = "SMBC";
+    string baseUrl = "/Comic/Comics/SMBC?loadPartial=true&comicURL=";
+    string previousAction = string.Format("{0}{1}", baseUrl, Model.PreviousComicURL);
+    string nextAction = string.Format("{0}{1}", baseUrl, Model.NextComicURL);
+    string randomAction = string.Format("{0}{1}", baseUrl, Model.RandomComicUrl);
+}
+
+<script src="~/Scripts/LeftRightComicPrevComicNext.js"></script>
+<div id="mainSMBCComic" class="main-comic">
+    <h3>SMBC</h3>
+    
+    <div class="pure-controls" style="">
+
+        @*<button id="searchMovies" class="pure-button pure-button-primary">Search Movies</button>*@
+        <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+        
+        @if (!string.IsNullOrWhiteSpace(Model.RandomComicUrl))
+        {
+            <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@randomAction" class="comic-random pure-button">Random</a>
+        }
+
+        <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@nextAction" class="comic-next pure-button">Next</a>
+    </div>
+
+    <div>
+        <h4>Main Comic</h4>
+        <img class="img-responsive" src="@Model.ComicURL" /> 
+    </div>
+    <div>
+        <h4>After Comic</h4>
+        <img class="img-responsive" src="@Model.AfterComicURL" />
+    </div>
+    
+
+    <div class="pure-controls" style="">
+
+        @*<button id="searchMovies" class="pure-button pure-button-primary">Search Movies</button>*@
+        <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+        @if (!string.IsNullOrWhiteSpace(Model.RandomComicUrl))
+        {
+            <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@randomAction" class="comic-random pure-button">Random</a>
+        }
+        <a onclick='LoadComic($(this), "mainSMBCComic"); return false;' data-href="@nextAction" class="comic-next pure-button">Next</a>
+    </div>
+</div>

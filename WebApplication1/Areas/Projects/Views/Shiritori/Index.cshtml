@@ -1,0 +1,377 @@
+﻿@model WebApplication1.Areas.Projects.Models.ShiritoriModel
+
+@{
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+
+    <script src="~/Scripts/jquery.countdown360.js"></script>
+    <title>Shiritori</title>
+    <style>
+        .submittedWord {
+            float: left;
+        }
+
+        .submittedWordPoints {
+            float: right;
+        }
+
+        .player-wrap {
+            margin: 20px auto;
+            width: 45%;
+            border: 2px solid black;
+            padding: 100px;
+            -ms-border-radius: 25px;
+            border-radius: 25px;
+        }
+
+        .player1 {
+            float: left;
+        }
+
+        .player2 {
+            float: right;
+        }
+
+        .gameScoreHeader {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+    <script>
+
+        var playerPoints = 50;
+        var playerTime = 15;
+        var lastLetter = getStartChar();
+        var playing = true;
+
+        var wordJsonUrl = "@Url.Action("GetPossibleWords")";
+
+        var player1 = {
+            name: "Player 1",
+            wins: 0,
+        }
+
+        var player2 = {
+            name: "Player 2",
+            wins: 0,
+        }
+
+        var currPlayerGo = player1;
+
+        $(function () {
+
+            InitializeGame(player1);
+
+            //Hook up word check
+            $(".input input").each(function () {
+
+                var textBox = $(this);
+
+                textBox.keypress(textBox, function (e) {
+
+                    var code = e.keyCode || e.which;
+                    if (code != 13) return;
+                    if (textBox == null) return;
+
+                    ClearErrors();
+
+                    var txtBox = $(e.target);
+                    var text = txtBox.val();
+
+                    if (text.length < 4) {
+                        ShowWordLengthError(txtBox);
+                        return;
+                    }
+                    
+                    $.post(wordJsonUrl, { baseLetters: text }, function (data) {
+
+                        var currWordBank = data.Words || [];
+
+                        var found = $.inArray(text, currWordBank) > -1;
+                        if (found == false) {
+                            ShowNonExistingWordError(txtBox);
+                            return;
+                        }
+
+                        // existing word :)
+
+                        var points = text.length - 4;
+                        lastLetter = text[text.length - 1];
+
+                        var keepOn = AddPoints(text, points, currPlayerGo);
+
+                        if (keepOn != null && keepOn == false) {
+                            return;
+                        }
+
+                        SwitchPlayer(currPlayerGo);
+                    });
+                });
+
+
+            });
+
+        });
+
+        function SwitchPlayer(player) {
+            var otherPlayer = getOtherPlayer(player);
+
+            player.textBox.val("");
+            player.textBox.attr("disabled", "disabled");
+
+            StartPlayer(otherPlayer);
+        }
+
+        function StartPlayer(player) {
+
+            player.textBox.val(lastLetter);
+            player.textBox.removeAttr("disabled");
+            player.textBox.focus();
+
+            currPlayerGo = player;
+
+            startTimer(player);
+        }
+
+        function AddPoints(word, points, player) {
+            var wordLi = $(document.createElement("li"));
+            var wordDiv = $(document.createElement("div"));
+            wordDiv.attr("style", "clear: both;");
+
+            var wordLabel = $(document.createElement("label"));
+            wordLabel.addClass("submittedWord");
+            wordLabel.text(word);
+
+            var pointsLabel = $(document.createElement("label"));
+            pointsLabel.addClass("submittedWordPoints");
+            pointsLabel.text(points);
+
+            wordDiv.append(wordLabel);
+            wordDiv.append(pointsLabel);
+
+            var timePoints = player.timer.countdown360().elapsed();
+            initializeTimer(player);
+
+            player.points -= points + timePoints;
+
+            if (player.points <= 0) {
+                alert(player.name + " wins!");
+                player.wins += 1;
+                updateGameScore();
+                if (player == player1) {
+                    InitializeGame(player2);
+                } else {
+                    InitializeGame(player1);
+                }
+
+                return false;
+
+            }
+
+            updateScore(player);
+
+            wordLi.append(wordDiv);
+
+            player.ul.append(wordLi);
+        }
+
+        function updateScore(player) {
+            player.scoreBox.text("Score: " + player.points);
+        }
+
+        function getStartChar() {
+            // Get starting char
+            //97 - 122
+            var keyCode = Math.floor(Math.random() * (120 - 97)) + 97;
+            var startingChar = '' + String.fromCharCode(keyCode);
+            return startingChar;
+        }
+
+        function InitializeGame(player) {
+
+            $(".wordContainer").each(function () {
+                $(this).empty();
+            });
+
+            lastLetter = getStartChar();
+
+            player1.textBox = $('.player1input');
+            player1.scoreBox = $(".player1 .player div.score");
+            player1.ul = $(".player1Ul");
+            player1.points = playerPoints;
+            player1.scoreBox.text("Score: " + player1.points);
+            player1.timer = $(".player1 .player .timer-count");
+
+            player1.textBox.val("");
+            player1.timer.hide();
+
+            player2.textBox = $('.player2input');
+            player2.scoreBox = $(".player2 .player div.score");
+            player2.ul = $(".player2Ul");
+            player2.points = playerPoints;
+            player2.scoreBox.text("Score: " + player2.points);
+            player2.timer = $(".player2 .player .timer-count");
+
+            player2.textBox.val("");
+            player2.timer.hide();
+
+            var r = confirm("Press ok to begin");
+            if (r == true) {
+                StartPlayer(player);
+            } else {
+                window.location.href = "/";
+            }
+        }
+
+        function SwitchPlayerOnFail(player) {
+            // subtract points from curr
+            // switch to other,
+            player.points += 2;
+            updateScore(player);
+            player.timer.hide();
+            SwitchPlayer(player);
+
+        }
+
+        function getOtherPlayer(player) {
+            if (player == player1) {
+                return player2;
+            } else {
+                return player1;
+            }
+        }
+
+        function initializeTimer(player) {
+
+            player.timer.countdown360({
+                radius: 30,
+                seconds: playerTime,
+                //fontColor: '#FFFFFF',
+                autostart: false,
+                onComplete: function () {
+                    SwitchPlayerOnFail(player);
+                }
+            }).stop();
+
+        }
+
+        function startTimer(player) {
+            initializeTimer(player);
+            player.timer.show();
+            playTimer(player);
+        }
+
+        function playTimer(player) {
+            player.timer.countdown360().start();
+        }
+
+        function stopTimer(player) {
+            player.timer.countdown360().stop();
+        }
+
+        function ShowWordLengthError(input) {
+            //populate message with error
+            ShowError(input, "Your submitted word was not long enough, please try again");
+        }
+
+        function ShowNonExistingWordError(input) {
+            //populate message with error
+            ShowError(input, "Your submitted word was not found in our dictionary, please try again");
+
+        }
+
+        function ShowError(input, errorMsg) {
+            var errorDiv = $(input.siblings("div")[0]);
+            var errorLabel = $("<label class='errorLabel'></label>");
+            errorLabel.text(errorMsg);
+            errorDiv.append(errorLabel);
+        }
+
+        function ClearErrors() {
+            $("div.error").each(function () {
+                $(this).empty();
+            });
+        }
+
+        function updateGameScore() {
+            $(".gameScore").text(player1.wins + " - " + player2.wins);
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div class="game">
+            <div class="gamecontainer" style="">
+                <div class="gameScoreHeader">
+                    <div>Score</div>
+                    <div class="gameScore">0 - 0</div>
+
+                </div>
+
+
+                <div class="player-wrap player1">
+                    <div class="title-wrap" style="opacity: 1;">
+                        <div class="title" title="Player 1">Player 1</div>
+                    </div>
+                    <div class="player" id="left">
+                        <div class="score">0</div>
+                        <div class="score-change" style="display: none;"></div>
+                        <div class="timer" data-intro="This is a timer. You get one point for each remaining second." data-step="4" style="display: block;">
+                            <div class="timer-count" style="font-size: 25.6px; padding-top: 3px; width: 33px;">
+
+                            </div>
+                            <canvas class="timer-graphic" height="32" width="33"></canvas>
+                        </div>
+                        <div class="input">
+                            <div>
+                                <input id="player1input" class="player1input" autocapitalize="off" autocorrect="off" autofocus="autofocus" placeholder="">
+                                <div class="error"></div>
+                            </div>
+                        </div>
+                        <div class="words">
+                            <ul class="player1Ul wordContainer" style="list-style-type: none;"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="player-wrap player2">
+                    <div class="title-wrap" style="opacity: 1;">
+                        <div class="title" title="Player 2">Player 2</div>
+                    </div>
+                    <div class="player" id="right">
+                        <div class="score">0</div>
+                        <div class="score-change" style="display: none;"></div>
+                        <div class="timer" data-intro="This is a timer. You get one point for each remaining second." data-step="4" style="display: block;">
+                            <div class="timer-count" style="font-size: 25.6px; padding-top: 3px; width: 33px;">
+
+                            </div>
+                            <canvas class="timer-graphic" height="32" width="33"></canvas>
+                        </div>
+                        <div class="input">
+                            <div>
+                                <input class="player2input" autocapitalize="off" autocorrect="off" autofocus="autofocus" placeholder="">
+                                <div class="error"></div>
+                            </div>
+                        </div>
+                        <div class="words">
+                            <ul class="player2Ul wordContainer" style="list-style-type: none;"></ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="clear: both; text-align: center">
+                @*<button class="pure-button" onclick="togglePlay()">Pause</button>*@
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

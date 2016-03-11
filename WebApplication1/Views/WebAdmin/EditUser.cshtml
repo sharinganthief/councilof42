@@ -1,0 +1,27 @@
+﻿@model WebApplication1.Models.EditUserModel
+
+@{
+    ViewBag.Title = "Edit User";
+}
+
+<h2>Edit @Model.User.UserName</h2>
+
+<div>
+    <div>
+        @Html.ActionLink("Reset Password", "ResetPassword", new { userid = Model.User.Id})
+    </div>
+    <div>
+        @using (Html.BeginForm("UpdateUserRoles", "WebAdmin"))
+        {
+
+            <input type="hidden" name="userID" value="@Model.User.Id"/>
+            @Html.CheckBoxListFor(x => x.PostedRoles.RoleIDs,
+                x => x.Roles,
+                x => x.ID,
+                x => x.Name,
+                x => x.UserRoles)
+            
+            <input type="submit" value="Update Roles"/>
+        }
+    </div>
+</div>

@@ -1,0 +1,82 @@
+﻿@model WebApplication1.Areas.Movie.Models.ManageUserMoviesModel
+@{
+    
+}
+
+
+<script src="~/Scripts/MovieList.js"></script>
+
+<script type="text/javascript">
+
+
+    $(function() {
+
+        @{
+            IHtmlString rawAllMovies = Html.Raw(Json.Encode(Model.MoviesList.ToArray()));
+            IHtmlString rawUserMovies = Html.Raw(Json.Encode(Model.UserMovies.ToArray()));
+        }
+        var movieAccordionContainer = $("#accordionContainer");
+        var accordionId = "movieAccordion";
+        var allMovies = @rawAllMovies;
+        var userMovies = @rawUserMovies;
+
+        BuildMovieList(movieAccordionContainer, accordionId, allMovies);
+
+        SetCheckBoxesForMovies(userMovies);
+
+
+    });
+
+    function updateMovieList() {
+
+        var movieIds = [];
+
+        $(".headerChk:checked").each(function() {
+            var h3  = $(this).closest("h3");
+            var id = h3.data('filmID');
+            movieIds.push(id);
+        });
+
+
+
+        $.ajax({
+            url: '/Movie/Admin/UpdateMoviesForUser',
+            type: 'POST',
+            data: JSON.stringify({ movieIDs: movieIds }),
+            //dataType: 'json',
+            traditional: true,
+            contentType: 'application/json',
+            success: function(result) {
+                console.log(result);
+                if (result.Success) {
+                    var movies = result.Movies;
+
+                    SetCheckBoxesForMovies(movies);
+                }
+
+            }
+        });
+
+    }
+
+    function SetCheckBoxesForMovies(movies) {
+        movies.forEach(function(movie) {
+            setMovieHeaderCheckBoxToSeen(movie.FilmID);
+        });
+    }
+
+
+</script>
+
+<div class="row" style="padding: 20px;">
+    <div class="col-md-10">
+        <div id="accordionContainer" style="width: 75%;">
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <a href="#" class="pure-button pure-button-primary" style="position:fixed;"
+           onclick="updateMovieList()">Update Checked Movies</a>
+    </div>
+</div>
+

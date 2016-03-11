@@ -1,0 +1,26 @@
+﻿@model WebApplication1.Areas.Comic.Models.Comic.OglafModel
+
+@{
+    ViewBag.Title = "Oglaf";
+    //string baseUrl = "/Comic/Comics/Oglaf?loadPartial=true&comicURL=";
+    //string previousAction = string.Format("{0}{1}", baseUrl, Model.PreviousComicURL);
+    //string nextAction = string.Format("{0}{1}", baseUrl, Model.NextComicURL);
+}
+<div id="mainOGLAFComic" class="main-comic">
+    <h3>Oglaf</h3>
+
+    @*<div class="pure-controls" style="">
+
+            <a onclick='LoadComic($(this), "mainOGLAFComic"); return false;' data-href="@previousAction" class="comic-prev pure-button">Previous</a>
+            <a onclick='LoadComic($(this), "mainOGLAFComic"); return false;' data-href="@nextAction" class="comic-next pure-button">Next</a>
+        </div>*@
+
+    <img class="img-responsive" src="@Model.ComicTitleURL" />
+
+    <div>
+        <img class="img-responsive" src="@Model.ComicURL" title="@Model.ComicText" />
+    </div>
+    <div style="margin: 20px 0px 0px 0px">
+        <p>@Model.ComicText</p>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@using WebApplication1.Models
+@model WebApplication1.Models.ManageUsersModel
+
+@{
+    ViewBag.Title = "Manage Users";
+}
+
+<h2>Manage Users</h2>
+
+<div>
+    @foreach (ApplicationUser user in Model.Users)
+    {
+        <div>
+            <label>@user.UserName</label>
+        </div>
+        <div>
+            @Html.ActionLink("Edit", "EditUser", new { userid = user.Id })
+        </div>
+    }
+</div>

@@ -1,0 +1,45 @@
+﻿@using WebApplicationData
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Council of 42</h1>
+    <p class="lead">Welcome to the site. This is a congregation of both the mind and the humor. Frequently engaging
+        in a "think tank/drink tank" myself and the other members work on various interesting projects ranging from 
+    carpentry and minor electrical engineering to this site :) please enjoy.</p>
+    <p>
+        @Html.ActionLink("Projects", "Index", "Main", new { Area = "Projects" }, new { @class = "btn btn-primary btn-large" })
+        
+    </p>
+</div>
+
+<div class="row">
+    @if (User.IsInRole(Settings.FriendRole))
+    {
+        <div class="col-md-4">
+            <h2>Dream Log</h2>
+            <p>
+                Phillip, the primary developer for this site and most projects has weird dreams and once hosted a dream log on a site for his Web Programming class. This is its continuation
+            </p>
+            <p>@Html.ActionLink("Dream Log", "Index", "DreamLog", null, new {@class = "btn btn-default"})</p>
+        </div>
+    }
+    @if (User.IsInRole(Settings.FriendRole))
+    {
+        <div class="col-md-4">
+            <h2>Comics</h2>
+            <p>
+                Just a smattering of the interesting comics most if not all of the group follow, like and/or love.
+            </p>
+            <p>@Html.ActionLink("Comics", "Index", "Comics", new {area = "Comic"}, new {@class = "btn btn-default"})</p>
+        </div>
+    }
+    <div class="col-md-4">
+        <h2>Movie Picker</h2>
+        <p>
+            The main page for searching and picking a movie to watch. Fairly self explanatory.
+        </p>
+        <p>@Html.ActionLink("Movie Picker", "Index", "Search", new { area = "Movie" }, new { @class = "btn btn-default" })</p>
+    </div>
+</div>

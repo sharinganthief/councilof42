@@ -1,0 +1,101 @@
+﻿@using System.Drawing
+@using WebApplicationData
+@using WebApplicationData.Image
+@model WebApplication1.Areas.Images.Models.ImageTagModel
+
+@{
+    ViewBag.Title = "Image Tags";
+}
+<script src="~/Scripts/jquery.tagcanvas.min.js"></script>
+
+<script type="text/javascript">
+
+
+    //var word_list = @Html.Raw(Json.Encode(Model.ImageTags.Select(o => new { text = o.Key, weight = o.Value, link = Url.Action("Index", new { page = 0, imageTags = new[] { o.Key } }) }).ToArray()));
+
+
+    //$.fn.tagcloud.defaults = {
+    //    size: {start: 1, end: 7, unit: 'em'},
+    //    color: {start: '#FF9933', end: '#000'}
+    //};
+
+    $(function () {
+        //$('#tagCloud a').tagcloud();
+
+        var gradient = {
+            17: '#f00', // red
+            0.33: '#ff0', // yellow
+            0.5: 'orange', // orange
+            0.66: '#0f0', // green
+            1: '#00f' // blue
+        };
+        $('#myCanvas').tagcanvas({
+            weightGradient: gradient,
+            weight: true,
+            weightFrom: 'data-weight',
+            shadow: '#ccf',
+            shadowBlur: 3,
+            interval: 20,
+            textFont: 'Impact,Arial Black,sans-serif',
+            textColour: '#82797B',
+            textHeight: 20,
+            outlineColour: '#F2F0F0',
+            outlineThickness: 5,
+            maxSpeed: 0.01,
+            minBrightness: 0.1,
+            depth: 0.92,
+            pulsateTo: 0.2,
+            pulsateTime: 0.75,
+            initial: [0.1, -0.1],
+            decel: 0.98,
+            reverse: true,
+            hideTags: false
+        }, 'weightTags');
+
+
+    });
+
+
+    //$(function() {
+
+
+
+
+    //    $("#wordcloud").jQCloud(word_array, {
+    //        width: 500,
+    //        height: 500
+    //    });
+
+    //});
+
+
+    //$(function() {
+    //    //$("#my_favorite_latin_words").jQCloud(word_list);
+    //});
+
+</script>
+
+<h2>Image Tags</h2>
+
+@*<div id="my_favorite_latin_words" style="width: 550px; height: 350px; border: 1px solid #ccc;"></div>*@
+
+
+<div id="cloud">
+    <canvas width="800" height="650" id="myCanvas">
+        <ul class="weighted" style="font-size: 50%" id="weightTags">
+            @{
+                foreach (KeyValuePair<string, int> imageTag in Model.ImageTags)
+                {
+                    <li>
+                        @Html.ActionLink(imageTag.Key, "Index", new { page = 0, imageTags =  imageTag.Key }, new { data_weight = imageTag.Value * 20, style = string.Format("font-size: {0}ex", imageTag.Value * 2) })
+                    </li>
+                }
+            }
+        </ul>
+</canvas>
+</div>
+
+
+@*<div id="wordcloud">
+
+    </div>*@
