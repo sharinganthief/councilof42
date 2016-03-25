@@ -88,6 +88,20 @@ namespace WebApplication1.Areas.Comic.Controllers
 
 		[AuthorizeUserAndFriend]
 		[ComicActionMethod]
+		public ActionResult PoorlyDrawnLines(bool loadPartial, string comicURL = null)
+		{
+			PoorlyDrawnLinesModel model = new PoorlyDrawnLinesModel(comicURL);
+			if (loadPartial)
+			{
+				PartialViewResult partial = PartialView("_PoorlyDrawnLines", model);
+				return partial;
+			}
+			return View("_PoorlyDrawnLines", model);
+
+		}
+
+		[AuthorizeUserAndFriend]
+		[ComicActionMethod]
 		public ActionResult SMBC(bool loadPartial, string comicURL = null)
 		{
 			SmbcModel model = new SmbcModel(comicURL);

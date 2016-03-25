@@ -190,7 +190,9 @@
     <Compile Include="Areas\About\Models\RulesModel.cs" />
     <Compile Include="Areas\Comic\ComicAreaRegistration.cs" />
     <Compile Include="Areas\Comic\Models\ComicPropertyArgs.cs" />
+    <Compile Include="Areas\Comic\Models\Comic\ComicNavigationModel.cs" />
     <Compile Include="Areas\Comic\Models\Comic\SmbcModel.cs" />
+    <Compile Include="Areas\Comic\Models\Comic\PoorlyDrawnLinesModel.cs" />
     <Compile Include="Areas\Comic\Models\Comic\XkcdModel.cs" />
     <Compile Include="Areas\Images\Controllers\ImageMainController.cs" />
     <Compile Include="Areas\Images\ImagesAreaRegistration.cs" />
@@ -289,6 +291,8 @@
     <Content Include="Content\resources\Rules\Rules.json" />
     <Content Include="Areas\Movie\Views\Search\RegisterForMovieAPI.cshtml" />
     <Content Include="Areas\Movie\Views\Admin\ManageUserMovies.cshtml" />
+    <Content Include="Areas\Comic\Views\Comics\_PoorlyDrawnLines.cshtml" />
+    <Content Include="Areas\Comic\Views\Comics\_ComicNavigation.cshtml" />
     <None Include="Properties\PublishProfiles\councilof42 %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\councilof42 %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\councilof42-webdeploy.pubxml" />

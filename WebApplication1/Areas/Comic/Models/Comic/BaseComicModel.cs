@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Net.Http;
 using HtmlAgilityPack;
 using WebApplicationBusiness;
 
@@ -58,8 +60,9 @@ namespace WebApplication1.Areas.Comic.Models.Comic
 				urlToUse = string.Format("{0}{1}", this.BaseUrl, url);
 			}
 
+			string finalUrl = CheckForRandom(urlToUse);
 
-			HtmlDocument doc = new HtmlWeb().Load(urlToUse);
+			HtmlDocument doc = new HtmlWeb().Load(finalUrl);
 
 			foreach (ComicPropertyArgs comicPropertyArg in comicPropArgs)
 			{
@@ -79,6 +82,11 @@ namespace WebApplication1.Areas.Comic.Models.Comic
 
 
 			Cb.AddComicToCache(this, GetCacheKey());
+		}
+
+		public virtual string CheckForRandom(string urlToUse)
+		{
+			return urlToUse;
 		}
 
 		//public string Layout { get; set; }
